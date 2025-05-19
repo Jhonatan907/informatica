@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de Informática - Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #003366;
+    }
+
+    .question {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004d99;
+    }
+
+    #result {
+      font-size: 20px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>🧠 Quiz de Informática</h1>
+    <div id="quiz">
+      <!-- Aquí se cargan dinámicamente las preguntas -->
+    </div>
+    <button id="nextBtn" onclick="nextQuestion()">Siguiente</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "¿Qué significa CPU?",
+        options: ["Unidad de Procesamiento Central", "Centro de Producción Unificado", "Controlador Personal Universal"],
+        answer: "Unidad de Procesamiento Central"
+      },
+      {
+        question: "¿Cuál de los siguientes es un sistema operativo?",
+        options: ["Excel", "Linux", "Google"],
+        answer: "Linux"
+      },
+      {
+        question: "¿Qué componente almacena datos temporalmente?",
+        options: ["RAM", "Disco Duro", "Monitor"],
+        answer: "RAM"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const quiz = document.getElementById("quiz");
+      const q = quizData[currentQuestion];
+
+      quiz.innerHTML = `
+        <div class="question">${q.question}</div>
+        ${q.options.map(opt => `<button onclick="checkAnswer('${opt}')">${opt}</button>`).join('')}
+      `;
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) {
+        score++;
+      }
+      document.querySelectorAll("#quiz button").forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === correct) {
+          btn.style.backgroundColor = "#28a745";
+        } else if (btn.textContent === selected) {
+          btn.style.backgroundColor = "#dc3545";
+        }
+      });
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("nextBtn").style.display = "none";
+      document.getElementById("result").innerHTML = `✅ Juego finalizado. Tu puntaje: ${score} de ${quizData.length}`;
+    }
+
+    // Iniciar el quiz
+    loadQuestion();
+  </script>
+
+</body>
+</html>
